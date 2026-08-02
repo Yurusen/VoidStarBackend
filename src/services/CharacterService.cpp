@@ -9,19 +9,8 @@ CharacterService::CharacterService(
 }
 
 void CharacterService::CreateCharacter(
-    int playerId,
-    const std::string &name)
-
+    const Cultivator &character)
 {
-
-    Character character;
-
-    character.SetID(
-        std::to_string(playerId));
-
-    character.Identity.Name =
-        name;
-
     characterRepository.CreateCharacter(
         character);
 }

@@ -1,5 +1,7 @@
 #include "CharacterRepository.h"
 
+#include <cstdint>
+
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/array.hpp>
 #include <bsoncxx/json.hpp>
@@ -17,18 +19,13 @@ CharacterRepository::CharacterRepository(
 std::string CharacterRepository::GetCharacterById(
     const std::string &id)
 {
-
     auto collection = mongo.GetDatabase()["characters"];
 
     auto result = collection.find_one(
         bsoncxx::builder::stream::document{}
-
         << "CharacterID"
         << id
-
         << bsoncxx::builder::stream::finalize);
-
-    Character character;
 
     if (!result)
     {
@@ -40,10 +37,8 @@ std::string CharacterRepository::GetCharacterById(
 }
 
 void CharacterRepository::CreateCharacter(
-    const Character &character)
-
+    const Cultivator &character)
 {
-
     auto collection =
         mongo.GetDatabase()["characters"];
 
@@ -76,7 +71,8 @@ void CharacterRepository::CreateCharacter(
         << character.Identity.CountryOfOrigin
 
         << "Age"
-        << character.Identity.Age
+        << static_cast<std::int64_t>(
+               character.Identity.Age)
 
         << "Titles"
         << titles.view()
@@ -87,13 +83,16 @@ void CharacterRepository::CreateCharacter(
         document{}
 
         << "Level"
-        << character.Stats.Level
+        << static_cast<std::int64_t>(
+               character.Stats.Level)
 
         << "Health"
-        << character.Stats.Health
+        << static_cast<std::int64_t>(
+               character.Stats.Health)
 
         << "KillCount"
-        << character.Stats.KillCount
+        << static_cast<std::int64_t>(
+               character.Stats.KillCount)
 
         << finalize;
 
@@ -101,10 +100,12 @@ void CharacterRepository::CreateCharacter(
         document{}
 
         << "Honor"
-        << character.Personality.Honor
+        << static_cast<std::int64_t>(
+               character.Personality.Honor)
 
         << "Courage"
-        << character.Personality.Courage
+        << static_cast<std::int64_t>(
+               character.Personality.Courage)
 
         << finalize;
 

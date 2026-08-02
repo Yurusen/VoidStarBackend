@@ -10,8 +10,7 @@ public:
         CharacterService &service);
 
     void CreateCharacter(
-        int playerId,
-        const std::string &name);
+        const Cultivator &character);
 
 private:
     CharacterService &service;

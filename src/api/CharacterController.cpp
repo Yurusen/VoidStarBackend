@@ -1,4 +1,5 @@
 #include "CharacterController.h"
+#include "../../sharedModule/models/character/Character.hpp"
 
 CharacterController::CharacterController(
     CharacterService &service)
@@ -9,12 +10,10 @@ CharacterController::CharacterController(
 }
 
 void CharacterController::CreateCharacter(
-    int playerId,
-    const std::string &name)
+    const Cultivator &character)
 
 {
 
     service.CreateCharacter(
-        playerId,
-        name);
+        character);
 }

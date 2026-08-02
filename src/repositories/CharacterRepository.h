@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../models/Character.h"
+#include "../../sharedModule/models/character/Character.hpp"
 
 #include "../database/MongoConnection.h"
 
@@ -12,7 +12,7 @@ public:
         MongoConnection &database);
 
     void CreateCharacter(
-        const Character &character);
+        const Cultivator &character);
 
     std::string GetCharacterById(
         const std::string &id);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../models/Character.h"
+#include "../../sharedModule/models/character/Character.hpp"
 
 #include "../repositories/CharacterRepository.h"
 
@@ -12,8 +12,7 @@ public:
         CharacterRepository &repository);
 
     void CreateCharacter(
-        int playerId,
-        const std::string &name);
+        const Cultivator &character);
 
     std::string GetCharacterById(
         const std::string &id)

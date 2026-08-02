@@ -1,10 +1,8 @@
 #include "database/MongoConnection.h"
-
 #include "repositories/CharacterRepository.h"
-
 #include "services/CharacterService.h"
-
 #include "api/CharacterController.h"
+#include "server/HttpServer.h"
 
 int main()
 {
@@ -20,9 +18,10 @@ int main()
     CharacterController controller(
         service);
 
-    controller.CreateCharacter(
-        1001,
-        "Knight");
+    HttpServer server(
+        service);
+
+    server.Start();
 
     return 0;
 }
