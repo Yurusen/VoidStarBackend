@@ -1,0 +1,3 @@
+/Users/sasana01/Documents/Games/VoidStar/VoidStarBackend/build/CMakeFiles/VoidStarBackend.dir
+/Users/sasana01/Documents/Games/VoidStar/VoidStarBackend/build/CMakeFiles/edit_cache.dir
+/Users/sasana01/Documents/Games/VoidStar/VoidStarBackend/build/CMakeFiles/rebuild_cache.dir
