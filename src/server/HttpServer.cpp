@@ -33,20 +33,10 @@ void HttpServer::Start()
                     "Invalid JSON");
             }
 
-
             Cultivator character;
-
-            character.CharacterID =
-                body["CharacterID"].s();
-
-
-            character.Identity.Name =
-                body["Name"].s();
-
 
             characterService.CreateCharacter(
                 character);
-
 
             return crow::response(
                 201,
@@ -54,11 +44,14 @@ void HttpServer::Start()
         }
         catch (const std::exception &e)
         {
+            std::cerr << "CREATE CHARACTER ERROR: "
+                      << e.what()
+                      << std::endl;
+
             return crow::response(
                 500,
                 e.what());
         } });
-
     std::cout
         << "HTTP Server running on port 8080"
         << std::endl;
