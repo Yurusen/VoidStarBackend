@@ -19,768 +19,777 @@ CharacterRepository::CharacterRepository(
 std::string CharacterRepository::GetCharacterById(
     const std::string &id)
 {
-    auto collection =
-        mongo.GetDatabase()["characters"];
+       auto collection =
+           mongo.GetDatabase()["characters"];
 
-    auto result = collection.find_one(
-        document{}
-        << "CharacterID"
-        << id
-        << finalize);
+       auto result = collection.find_one(
+           document{}
+           << "CharacterID"
+           << id
+           << finalize);
 
-    if (!result)
-    {
-        return "{}";
-    }
+       if (!result)
+       {
+              return "{}";
+       }
 
-    return bsoncxx::to_json(
-        result->view());
+       return bsoncxx::to_json(
+           result->view());
 }
 
 void CharacterRepository::CreateCharacter(
     const Cultivator &character)
 {
-    auto collection =
-        mongo.GetDatabase()["characters"];
+       auto collection =
+           mongo.GetDatabase()["characters"];
 
-    // ============================================================
-    // IDENTITY ARRAYS
-    // ============================================================
+       // ============================================================
+       // IDENTITY ARRAYS
+       // ============================================================
 
-    auto titles = array{};
+       auto titles = array{};
 
-    for (const auto &title :
-         character.Identity.Titles)
-    {
-        titles << title;
-    }
+       for (const auto &title :
+            character.Identity.Titles)
+       {
+              titles << title;
+       }
 
-    auto achievements = array{};
+       auto achievements = array{};
 
-    for (const auto &achievement :
-         character.Identity.Achievements)
-    {
-        achievements << achievement;
-    }
+       for (const auto &achievement :
+            character.Identity.Achievements)
+       {
+              achievements << achievement;
+       }
 
-    // ============================================================
-    // RELATION ARRAYS
-    // ============================================================
+       // ============================================================
+       // RELATION ARRAYS
+       // ============================================================
 
-    auto discipleNames = array{};
+       auto discipleNames = array{};
 
-    for (const auto &name :
-         character.Relations.DiscipleNames)
-    {
-        discipleNames << name;
-    }
+       for (const auto &name :
+            character.Relations.DiscipleNames)
+       {
+              discipleNames << name;
+       }
 
-    auto friends = array{};
+       auto friends = array{};
 
-    for (const auto &name :
-         character.Relations.Friends)
-    {
-        friends << name;
-    }
+       for (const auto &name :
+            character.Relations.Friends)
+       {
+              friends << name;
+       }
 
-    auto familyMembers = array{};
+       auto familyMembers = array{};
 
-    for (const auto &name :
-         character.Relations.FamilyMembers)
-    {
-        familyMembers << name;
-    }
+       for (const auto &name :
+            character.Relations.FamilyMembers)
+       {
+              familyMembers << name;
+       }
 
-    auto rivals = array{};
+       auto rivals = array{};
 
-    for (const auto &name :
-         character.Relations.Rivals)
-    {
-        rivals << name;
-    }
+       for (const auto &name :
+            character.Relations.Rivals)
+       {
+              rivals << name;
+       }
 
-    auto enemies = array{};
+       auto enemies = array{};
 
-    for (const auto &name :
-         character.Relations.Enemies)
-    {
-        enemies << name;
-    }
+       for (const auto &name :
+            character.Relations.Enemies)
+       {
+              enemies << name;
+       }
 
-    auto lovers = array{};
+       auto lovers = array{};
 
-    for (const auto &name :
-         character.Relations.Lovers)
-    {
-        lovers << name;
-    }
+       for (const auto &name :
+            character.Relations.Lovers)
+       {
+              lovers << name;
+       }
 
-    // ============================================================
-    // IDENTITY
-    // ============================================================
+       // ============================================================
+       // IDENTITY
+       // ============================================================
 
-    auto identity =
-        document{}
+       auto identity =
+           document{}
 
-        << "Name"
-        << character.Identity.Name
+           << "Name"
+           << character.Identity.Name
 
-        << "PrimaryTitle"
-        << character.Identity.PrimaryTitle
+           << "PrimaryTitle"
+           << character.Identity.PrimaryTitle
 
-        << "CountryOfOrigin"
-        << character.Identity.CountryOfOrigin
+           << "CountryOfOrigin"
+           << character.Identity.CountryOfOrigin
 
-        << "Age"
-        << static_cast<std::int64_t>(
-               character.Identity.Age)
+           << "Age"
+           << static_cast<std::int64_t>(
+                  character.Identity.Age)
 
-        << "LifeSpan"
-        << static_cast<std::int64_t>(
-               character.Identity.LifeSpan)
+           << "LifeSpan"
+           << static_cast<std::int64_t>(
+                  character.Identity.LifeSpan)
 
-        << "Titles"
-        << titles.view()
+           << "Titles"
+           << titles.view()
 
-        << "Achievements"
-        << achievements.view()
+           << "Achievements"
+           << achievements.view()
 
-        // Appearance
-        << "Gender"
-        << static_cast<std::int64_t>(
-               character.Identity.Gender)
+           // Appearance
+           << "Gender"
+           << static_cast<std::int64_t>(
+                  character.Identity.Gender)
 
-        << "Race"
-        << static_cast<std::int64_t>(
-               character.Identity.Race)
+           << "Race"
+           << static_cast<std::int64_t>(
+                  character.Identity.Race)
 
-        << "HairColor"
-        << static_cast<std::int64_t>(
-               character.Identity.HairColor)
+           << "HairColor"
+           << static_cast<std::int64_t>(
+                  character.Identity.HairColor)
 
-        << "EyeColor"
-        << static_cast<std::int64_t>(
-               character.Identity.EyeColor)
+           << "EyeColor"
+           << static_cast<std::int64_t>(
+                  character.Identity.EyeColor)
 
-        << "BodyType"
-        << static_cast<std::int64_t>(
-               character.Identity.BodyType)
+           << "BodyType"
+           << static_cast<std::int64_t>(
+                  character.Identity.BodyType)
 
-        // Traits
-        << "NobilityStatus"
-        << static_cast<std::int64_t>(
-               character.Identity.NobilityStatus)
+           // Traits
+           << "NobilityStatus"
+           << static_cast<std::int64_t>(
+                  character.Identity.NobilityStatus)
 
-        << "Alignment"
-        << static_cast<std::int64_t>(
-               character.Identity.Alignment)
+           << "Alignment"
+           << static_cast<std::int64_t>(
+                  character.Identity.Alignment)
 
-        << "Quirks"
-        << static_cast<std::int64_t>(
-               character.Identity.Quirks)
+           << "Quirks"
+           << static_cast<std::int64_t>(
+                  character.Identity.Quirks)
 
-        << "JianghuReputation"
-        << static_cast<std::int64_t>(
-               character.Identity.JianghuReputation)
+           << "JianghuReputation"
+           << static_cast<std::int64_t>(
+                  character.Identity.JianghuReputation)
 
-        << "SectReputation"
-        << static_cast<std::int64_t>(
-               character.Identity.SectReputation)
+           << "SectReputation"
+           << static_cast<std::int64_t>(
+                  character.Identity.SectReputation)
 
-        << "DemonicReputation"
-        << static_cast<std::int64_t>(
-               character.Identity.DemonicReputation)
+           << "DemonicReputation"
+           << static_cast<std::int64_t>(
+                  character.Identity.DemonicReputation)
 
-        << "UnorthodoxReputation"
-        << static_cast<std::int64_t>(
-               character.Identity.UnorthodoxReputation)
+           << "UnorthodoxReputation"
+           << static_cast<std::int64_t>(
+                  character.Identity.UnorthodoxReputation)
 
-        << finalize;
+           << finalize;
 
-    // ============================================================
-    // PERSONALITY
-    // ============================================================
+       // ============================================================
+       // PERSONALITY
+       // ============================================================
 
-    auto personality =
-        document{}
+       auto personality =
+           document{}
 
-        << "Aggression"
-        << static_cast<std::int64_t>(
-               character.Personality.Aggression)
+           << "Aggression"
+           << static_cast<std::int64_t>(
+                  character.Personality.Aggression)
 
-        << "Honor"
-        << static_cast<std::int64_t>(
-               character.Personality.Honor)
+           << "Honor"
+           << static_cast<std::int64_t>(
+                  character.Personality.Honor)
 
-        << "Mercy"
-        << static_cast<std::int64_t>(
-               character.Personality.Mercy)
+           << "Mercy"
+           << static_cast<std::int64_t>(
+                  character.Personality.Mercy)
 
-        << "Greed"
-        << static_cast<std::int64_t>(
-               character.Personality.Greed)
+           << "Greed"
+           << static_cast<std::int64_t>(
+                  character.Personality.Greed)
 
-        << "Ambition"
-        << static_cast<std::int64_t>(
-               character.Personality.Ambition)
+           << "Ambition"
+           << static_cast<std::int64_t>(
+                  character.Personality.Ambition)
 
-        << "Loyalty"
-        << static_cast<std::int64_t>(
-               character.Personality.Loyalty)
+           << "Loyalty"
+           << static_cast<std::int64_t>(
+                  character.Personality.Loyalty)
 
-        << "Courage"
-        << static_cast<std::int64_t>(
-               character.Personality.Courage)
+           << "Courage"
+           << static_cast<std::int64_t>(
+                  character.Personality.Courage)
 
-        << "Ruthlessness"
-        << static_cast<std::int64_t>(
-               character.Personality.Ruthlessness)
+           << "Ruthlessness"
+           << static_cast<std::int64_t>(
+                  character.Personality.Ruthlessness)
 
-        << "Patience"
-        << static_cast<std::int64_t>(
-               character.Personality.Patience)
+           << "Patience"
+           << static_cast<std::int64_t>(
+                  character.Personality.Patience)
 
-        << "Fear"
-        << static_cast<std::int64_t>(
-               character.Personality.Fear)
+           << "Fear"
+           << static_cast<std::int64_t>(
+                  character.Personality.Fear)
 
-        << "Stress"
-        << static_cast<std::int64_t>(
-               character.Personality.Stress)
+           << "Stress"
+           << static_cast<std::int64_t>(
+                  character.Personality.Stress)
 
-        << "Fatigue"
-        << static_cast<std::int64_t>(
-               character.Personality.Fatigue)
+           << "Fatigue"
+           << static_cast<std::int64_t>(
+                  character.Personality.Fatigue)
 
-        << "Confidence"
-        << static_cast<std::int64_t>(
-               character.Personality.Confidence)
+           << "Confidence"
+           << static_cast<std::int64_t>(
+                  character.Personality.Confidence)
 
-        << "Bloodlust"
-        << static_cast<std::int64_t>(
-               character.Personality.Bloodlust)
+           << "Bloodlust"
+           << static_cast<std::int64_t>(
+                  character.Personality.Bloodlust)
 
-        << "Suspicion"
-        << static_cast<std::int64_t>(
-               character.Personality.Suspicion)
+           << "Suspicion"
+           << static_cast<std::int64_t>(
+                  character.Personality.Suspicion)
 
-        << "Anger"
-        << static_cast<std::int64_t>(
-               character.Personality.Anger)
+           << "Anger"
+           << static_cast<std::int64_t>(
+                  character.Personality.Anger)
 
-        << "Happiness"
-        << static_cast<std::int64_t>(
-               character.Personality.Happiness)
+           << "Happiness"
+           << static_cast<std::int64_t>(
+                  character.Personality.Happiness)
 
-        << "Sadness"
-        << static_cast<std::int64_t>(
-               character.Personality.Sadness)
+           << "Sadness"
+           << static_cast<std::int64_t>(
+                  character.Personality.Sadness)
 
-        << "Curiosity"
-        << static_cast<std::int64_t>(
-               character.Personality.Curiosity)
+           << "Curiosity"
+           << static_cast<std::int64_t>(
+                  character.Personality.Curiosity)
 
-        << finalize;
+           << finalize;
 
-    // ============================================================
-    // STATS
-    // ============================================================
+       // ============================================================
+       // STATS
+       // ============================================================
 
-    auto stats =
-        document{}
+       auto stats =
+           document{}
 
-        << "Level"
-        << static_cast<std::int64_t>(
-               character.Stats.Level)
+           << "Level"
+           << static_cast<std::int64_t>(
+                  character.Stats.Level)
 
-        << "Health"
-        << static_cast<std::int64_t>(
-               character.Stats.Health)
+           << "Health"
+           << static_cast<std::int64_t>(
+                  character.Stats.Health)
 
-        << "Stamina"
-        << static_cast<std::int64_t>(
-               character.Stats.Stamina)
+           << "Stamina"
+           << static_cast<std::int64_t>(
+                  character.Stats.Stamina)
 
-        << "Defense"
-        << static_cast<std::int64_t>(
-               character.Stats.Defense)
+           << "Defense"
+           << static_cast<std::int64_t>(
+                  character.Stats.Defense)
 
-        << "Accuracy"
-        << static_cast<std::int64_t>(
-               character.Stats.Accuracy)
+           << "Accuracy"
+           << static_cast<std::int64_t>(
+                  character.Stats.Accuracy)
 
-        << "Evasion"
-        << static_cast<std::int64_t>(
-               character.Stats.Evasion)
+           << "Evasion"
+           << static_cast<std::int64_t>(
+                  character.Stats.Evasion)
 
-        << "CriticalChance"
-        << static_cast<std::int64_t>(
-               character.Stats.CriticalChance)
+           << "CriticalChance"
+           << static_cast<std::int64_t>(
+                  character.Stats.CriticalChance)
 
-        << "CriticalDamage"
-        << static_cast<std::int64_t>(
-               character.Stats.CriticalDamage)
+           << "CriticalDamage"
+           << static_cast<std::int64_t>(
+                  character.Stats.CriticalDamage)
 
-        << "SpiritualResistance"
-        << static_cast<std::int64_t>(
-               character.Stats.SpiritualResistance)
+           << "SpiritualResistance"
+           << static_cast<std::int64_t>(
+                  character.Stats.SpiritualResistance)
 
-        << "PhysicalStrength"
-        << static_cast<std::int64_t>(
-               character.Stats.PhysicalStrength)
+           << "PhysicalStrength"
+           << static_cast<std::int64_t>(
+                  character.Stats.PhysicalStrength)
 
-        << "Speed"
-        << static_cast<std::int64_t>(
-               character.Stats.Speed)
+           << "Speed"
+           << static_cast<std::int64_t>(
+                  character.Stats.Speed)
 
-        << "QiCapacity"
-        << static_cast<std::int64_t>(
-               character.Stats.QiCapacity)
+           << "QiCapacity"
+           << static_cast<std::int64_t>(
+                  character.Stats.QiCapacity)
 
-        << "SpiritualSense"
-        << static_cast<std::int64_t>(
-               character.Stats.SpiritualSense)
+           << "SpiritualSense"
+           << static_cast<std::int64_t>(
+                  character.Stats.SpiritualSense)
 
-        << "SoulStrength"
-        << static_cast<std::int64_t>(
-               character.Stats.SoulStrength)
+           << "SoulStrength"
+           << static_cast<std::int64_t>(
+                  character.Stats.SoulStrength)
 
-        << "Comprehension"
-        << static_cast<std::int64_t>(
-               character.Stats.Comprehension)
+           << "Comprehension"
+           << static_cast<std::int64_t>(
+                  character.Stats.Comprehension)
 
-        << "DaoComprehension"
-        << static_cast<std::int64_t>(
-               character.Stats.DaoComprehension)
+           << "DaoComprehension"
+           << static_cast<std::int64_t>(
+                  character.Stats.DaoComprehension)
 
-        << "MentalFortitude"
-        << static_cast<std::int64_t>(
-               character.Stats.MentalFortitude)
+           << "MentalFortitude"
+           << static_cast<std::int64_t>(
+                  character.Stats.MentalFortitude)
 
-        << "Charisma"
-        << static_cast<std::int64_t>(
-               character.Stats.Charisma)
+           << "Charisma"
+           << static_cast<std::int64_t>(
+                  character.Stats.Charisma)
 
-        << "Luck"
-        << static_cast<std::int64_t>(
-               character.Stats.Luck)
+           << "Luck"
+           << static_cast<std::int64_t>(
+                  character.Stats.Luck)
 
-        << "KarmaicBalance"
-        << static_cast<std::int64_t>(
-               character.Stats.KarmaicBalance)
+           << "KarmaicBalance"
+           << static_cast<std::int64_t>(
+                  character.Stats.KarmaicBalance)
 
-        << "HeavenlyTribulationChance"
-        << static_cast<std::int64_t>(
-               character.Stats.HeavenlyTribulationChance)
+           << "HeavenlyTribulationChance"
+           << static_cast<std::int64_t>(
+                  character.Stats.HeavenlyTribulationChance)
 
-        << "HeavenlyFavor"
-        << static_cast<std::int64_t>(
-               character.Stats.HeavenlyFavor)
+           << "HeavenlyFavor"
+           << static_cast<std::int64_t>(
+                  character.Stats.HeavenlyFavor)
 
-        << "KillCount"
-        << static_cast<std::int64_t>(
-               character.Stats.KillCount)
+           << "KillCount"
+           << static_cast<std::int64_t>(
+                  character.Stats.KillCount)
 
-        << "StatusEffects"
-        << static_cast<std::int64_t>(
-               character.Stats.StatusEffects)
+           << "StatusEffects"
+           << static_cast<std::int64_t>(
+                  character.Stats.StatusEffects)
 
-        << finalize;
+           << finalize;
 
-    // ============================================================
-    // INVENTORY
-    // ============================================================
+       // ============================================================
+       // INVENTORY
+       // ============================================================
 
-    auto inventory =
-        document{}
+       auto inventory =
+           document{}
 
-        // Primary weapon
-        << "HasWeapon"
-        << character.Inventory.bHasWeapon
+           // Primary weapon
+           << "HasWeapon"
+           << character.Inventory.bHasWeapon
 
-        << "WeaponType"
-        << static_cast<std::int64_t>(
-               character.Inventory.WeaponType)
+           << "WeaponType"
+           << static_cast<std::int64_t>(
+                  character.Inventory.WeaponType)
 
-        << "WeaponGrade"
-        << static_cast<std::int64_t>(
-               character.Inventory.WeaponGrade)
+           << "WeaponGrade"
+           << static_cast<std::int64_t>(
+                  character.Inventory.WeaponGrade)
 
-        << "WeaponDurability"
-        << static_cast<std::int64_t>(
-               character.Inventory.WeaponDurability)
+           << "WeaponDurability"
+           << static_cast<std::int64_t>(
+                  character.Inventory.WeaponDurability)
 
-        << "WeaponDamage"
-        << static_cast<std::int64_t>(
-               character.Inventory.WeaponDamage)
+           << "WeaponDamage"
+           << static_cast<std::int64_t>(
+                  character.Inventory.WeaponDamage)
 
-        << "WeaponOwnerBound"
-        << character.Inventory.OwnerBound
+           << "WeaponOwnerBound"
+           << character.Inventory.OwnerBound
 
-        // Secondary weapon
-        << "HasSecondaryWeapon"
-        << character.Inventory.bHasSecondaryWeapon
+           // Secondary weapon
+           << "HasSecondaryWeapon"
+           << character.Inventory.bHasSecondaryWeapon
 
-        << "SecondaryWeaponType"
-        << static_cast<std::int64_t>(
-               character.Inventory.SeondaryWeaponType)
+           << "SecondaryWeaponType"
+           << static_cast<std::int64_t>(
+                  character.Inventory.SeondaryWeaponType)
 
-        << "SecondaryWeaponGrade"
-        << static_cast<std::int64_t>(
-               character.Inventory.SecondaryWeaponGrade)
+           << "SecondaryWeaponGrade"
+           << static_cast<std::int64_t>(
+                  character.Inventory.SecondaryWeaponGrade)
 
-        << "SecondaryWeaponDurability"
-        << static_cast<std::int64_t>(
-               character.Inventory.SecondaryWeaponDurability)
+           << "SecondaryWeaponDurability"
+           << static_cast<std::int64_t>(
+                  character.Inventory.SecondaryWeaponDurability)
 
-        << "SecondaryWeaponDamage"
-        << static_cast<std::int64_t>(
-               character.Inventory.SecondaryWeaponDamage)
+           << "SecondaryWeaponDamage"
+           << static_cast<std::int64_t>(
+                  character.Inventory.SecondaryWeaponDamage)
 
-        << "SecondaryWeaponOwnerBound"
-        << character.Inventory.SecondaryWeaponOwnerBound
+           << "SecondaryWeaponOwnerBound"
+           << character.Inventory.SecondaryWeaponOwnerBound
 
-        // Armour
-        << "HasArmour"
-        << character.Inventory.bHasArmour
+           // Armour
+           << "HasArmour"
+           << character.Inventory.bHasArmour
 
-        << "ArmourType"
-        << static_cast<std::int64_t>(
-               character.Inventory.ArmourType)
+           << "ArmourType"
+           << static_cast<std::int64_t>(
+                  character.Inventory.ArmourType)
 
-        << "ArmourGrade"
-        << static_cast<std::int64_t>(
-               character.Inventory.ArmourGrade)
+           << "ArmourGrade"
+           << static_cast<std::int64_t>(
+                  character.Inventory.ArmourGrade)
 
-        << "ArmourDurability"
-        << static_cast<std::int64_t>(
-               character.Inventory.ArmourDurability)
+           << "ArmourDurability"
+           << static_cast<std::int64_t>(
+                  character.Inventory.ArmourDurability)
 
-        << "ArmourDefense"
-        << static_cast<std::int64_t>(
-               character.Inventory.ArmourDefense)
+           << "ArmourDefense"
+           << static_cast<std::int64_t>(
+                  character.Inventory.ArmourDefense)
 
-        << "ArmourSpiritualResistance"
-        << static_cast<std::int64_t>(
-               character.Inventory.ArmourSpiritualResistance)
+           << "ArmourSpiritualResistance"
+           << static_cast<std::int64_t>(
+                  character.Inventory.ArmourSpiritualResistance)
 
-        << "ArmourOwnerBound"
-        << character.Inventory.ArmourOwnerBound
+           << "ArmourOwnerBound"
+           << character.Inventory.ArmourOwnerBound
 
-        // Accessory
-        << "HasAccessory"
-        << character.Inventory.bHasAccessory
+           // Accessory
+           << "HasAccessory"
+           << character.Inventory.bHasAccessory
 
-        << "AccessoryType"
-        << static_cast<std::int64_t>(
-               character.Inventory.AccessoryType)
+           << "AccessoryType"
+           << static_cast<std::int64_t>(
+                  character.Inventory.AccessoryType)
 
-        << "AccessoryGrade"
-        << static_cast<std::int64_t>(
-               character.Inventory.AccessoryGrade)
+           << "AccessoryGrade"
+           << static_cast<std::int64_t>(
+                  character.Inventory.AccessoryGrade)
 
-        // Storage ring
-        << "HasStorageRing"
-        << character.Inventory.bHasStorageRing
+           // Storage ring
+           << "StorageRingType"
+           << static_cast<std::int64_t>(
+                  character.Inventory.StorageRingType)
 
-        << "StorageRingType"
-        << static_cast<std::int64_t>(
-               character.Inventory.StorageRingType)
+           << "StorageRingCapacity"
+           << static_cast<std::int64_t>(
+                  character.Inventory.StorageRingCapacity)
 
-        // Treasure
-        << "HasTreasure"
-        << character.Inventory.bHasTreasure
+           << "StorageRingType"
+           << static_cast<std::int64_t>(
+                  character.Inventory.StorageRingType)
 
-        << "TreasureType"
-        << static_cast<std::int64_t>(
-               character.Inventory.TreasureType)
+           // Treasure
+           << "HasTreasure"
+           << character.Inventory.bHasTreasure
 
-        << "TreasureGrade"
-        << static_cast<std::int64_t>(
-               character.Inventory.TreasureGrade)
+           << "TreasureType"
+           << static_cast<std::int64_t>(
+                  character.Inventory.TreasureType)
 
-        // Spirit stones
-        << "SpiritStoneCount"
-        << static_cast<std::int64_t>(
-               character.Inventory.spiritStoneCount)
+           << "TreasureGrade"
+           << static_cast<std::int64_t>(
+                  character.Inventory.TreasureGrade)
 
-        << "SpiritStoneType"
-        << static_cast<std::int64_t>(
-               character.Inventory.SpiritStoneType)
+           // Spirit stones
+           << "SpiritStoneCount"
+           << static_cast<std::int64_t>(
+                  character.Inventory.spiritStoneCount)
 
-        << finalize;
+           << "SpiritStoneType"
+           << static_cast<std::int64_t>(
+                  character.Inventory.SpiritStoneType)
 
-    // ============================================================
-    // CULTIVATION
-    // ============================================================
+           << finalize;
 
-    auto cultivation =
-        document{}
+       // ============================================================
+       // CULTIVATION
+       // ============================================================
 
-        << "MartialPath"
-        << static_cast<std::int64_t>(
-               character.Cultivation.MartialPath)
+       auto cultivation =
+           document{}
 
-        << "SwordsmanStyle"
-        << static_cast<std::int64_t>(
-               character.Cultivation.SwordsmanStyle)
+           << "MartialPath"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.MartialPath)
 
-        << "WeaponProficiency"
-        << static_cast<std::int64_t>(
-               character.Cultivation.WeaponProficiency)
+           << "SwordsmanStyle"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.SwordsmanStyle)
 
-        << "IsOrthodoxCultivator"
-        << character.Cultivation.bIsOrthodoxCultivator
+           << "WeaponProficiency"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.WeaponProficiency)
 
-        << "IsDemonicCultivator"
-        << character.Cultivation.bIsDemonicCultivator
+           << "IsOrthodoxCultivator"
+           << character.Cultivation.bIsOrthodoxCultivator
 
-        << "BreakthroughProgress"
-        << static_cast<std::int64_t>(
-               character.Cultivation.BreakthroughProgress)
+           << "IsDemonicCultivator"
+           << character.Cultivation.bIsDemonicCultivator
 
-        << "CultivationExperience"
-        << static_cast<std::int64_t>(
-               character.Cultivation.CultivationExperience)
+           << "BreakthroughProgress"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.BreakthroughProgress)
 
-        << "FoundationStability"
-        << static_cast<std::int64_t>(
-               character.Cultivation.FoundationStability)
+           << "CultivationExperience"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.CultivationExperience)
 
-        << "CultivationSpeed"
-        << static_cast<std::int64_t>(
-               character.Cultivation.CultivationSpeed)
+           << "FoundationStability"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.FoundationStability)
 
-        << "HasFamiliar"
-        << character.Cultivation.bHasFamiliar
+           << "CultivationSpeed"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.CultivationSpeed)
 
-        << "SpiritRoot"
-        << static_cast<std::int64_t>(
-               character.Cultivation.SpiritRoot)
+           << "HasFamiliar"
+           << character.Cultivation.bHasFamiliar
 
-        << "BloodlineType"
-        << static_cast<std::int64_t>(
-               character.Cultivation.BloodlineType)
+           << "SpiritRoot"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.SpiritRoot)
 
-        << "BloodlinePurity"
-        << static_cast<std::int64_t>(
-               character.Cultivation.BloodlinePurity)
+           << "BloodlineType"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.BloodlineType)
 
-        << "BloodlineAwakening"
-        << static_cast<std::int64_t>(
-               character.Cultivation.BloodlineAwakening)
+           << "BloodlinePurity"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.BloodlinePurity)
 
-        << "PhysiqueType"
-        << static_cast<std::int64_t>(
-               character.Cultivation.PhysiqueType)
+           << "BloodlineAwakening"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.BloodlineAwakening)
 
-        << "SwordDao"
-        << static_cast<std::int64_t>(
-               character.Cultivation.SwordDao)
+           << "PhysiqueType"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.PhysiqueType)
 
-        << "BladeDao"
-        << static_cast<std::int64_t>(
-               character.Cultivation.BladeDao)
+           << "SwordDao"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.SwordDao)
 
-        << "FireDao"
-        << static_cast<std::int64_t>(
-               character.Cultivation.FireDao)
+           << "BladeDao"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.BladeDao)
 
-        << "WaterDao"
-        << static_cast<std::int64_t>(
-               character.Cultivation.WaterDao)
+           << "FireDao"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.FireDao)
 
-        << "LightningDao"
-        << static_cast<std::int64_t>(
-               character.Cultivation.LightningDao)
+           << "WaterDao"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.WaterDao)
 
-        << "SpaceDao"
-        << static_cast<std::int64_t>(
-               character.Cultivation.SpaceDao)
+           << "LightningDao"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.LightningDao)
 
-        << "TimeDao"
-        << static_cast<std::int64_t>(
-               character.Cultivation.TimeDao)
+           << "SpaceDao"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.SpaceDao)
 
-        << "LifeDao"
-        << static_cast<std::int64_t>(
-               character.Cultivation.LifeDao)
+           << "TimeDao"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.TimeDao)
 
-        << "DeathDao"
-        << static_cast<std::int64_t>(
-               character.Cultivation.DeathDao)
+           << "LifeDao"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.LifeDao)
 
-        << "ChaosDao"
-        << static_cast<std::int64_t>(
-               character.Cultivation.ChaosDao)
+           << "DeathDao"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.DeathDao)
 
-        << finalize;
+           << "ChaosDao"
+           << static_cast<std::int64_t>(
+                  character.Cultivation.ChaosDao)
 
-    // ============================================================
-    // TECHNIQUES
-    // ============================================================
+           << finalize;
 
-    auto techniques =
-        document{}
+       // ============================================================
+       // TECHNIQUES
+       // ============================================================
 
-        << "HasCultivationTechnique"
-        << character.Techniques.bHasCultivationTechnique
+       auto techniques =
+           document{}
 
-        << "MainCultivationTechnique"
-        << character.Techniques.MainCultivationTechnique
+           << "HasCultivationTechnique"
+           << character.Techniques.bHasCultivationTechnique
 
-        << "MainCultivationTechniqueLevel"
-        << static_cast<std::int64_t>(
-               character.Techniques.MainCultivationTechniqueLevel)
+           << "MainCultivationTechnique"
+           << character.Techniques.MainCultivationTechnique
 
-        << "HasSecondaryCultivationTechnique"
-        << character.Techniques.bHasSecondaryCultivationTechnique
+           << "MainCultivationTechniqueLevel"
+           << static_cast<std::int64_t>(
+                  character.Techniques.MainCultivationTechniqueLevel)
 
-        << "SecondaryCultivationTechnique"
-        << character.Techniques.SecondaryCultivationTechnique
+           << "HasSecondaryCultivationTechnique"
+           << character.Techniques.bHasSecondaryCultivationTechnique
 
-        << "SecondaryCultivationTechniqueLevel"
-        << static_cast<std::int64_t>(
-               character.Techniques.SecondaryCultivationTechniqueLevel)
+           << "SecondaryCultivationTechnique"
+           << character.Techniques.SecondaryCultivationTechnique
 
-        << "BodyRefinementTechnique"
-        << character.Techniques.BodyRefinementTechnique
+           << "SecondaryCultivationTechniqueLevel"
+           << static_cast<std::int64_t>(
+                  character.Techniques.SecondaryCultivationTechniqueLevel)
 
-        << "BodyRefinementTechniqueLevel"
-        << static_cast<std::int64_t>(
-               character.Techniques.BodyRefinementTechniqueLevel)
+           << "BodyRefinementTechnique"
+           << character.Techniques.BodyRefinementTechnique
 
-        << "SoulCultivationTechnique"
-        << character.Techniques.SoulCultivationTechnique
+           << "BodyRefinementTechniqueLevel"
+           << static_cast<std::int64_t>(
+                  character.Techniques.BodyRefinementTechniqueLevel)
 
-        << "SoulCultivationTechniqueLevel"
-        << static_cast<std::int64_t>(
-               character.Techniques.SoulCultivationTechniqueLevel)
+           << "SoulCultivationTechnique"
+           << character.Techniques.SoulCultivationTechnique
 
-        << "MovementTechnique"
-        << character.Techniques.MovementTechnique
+           << "SoulCultivationTechniqueLevel"
+           << static_cast<std::int64_t>(
+                  character.Techniques.SoulCultivationTechniqueLevel)
 
-        << "MovementTechniqueLevel"
-        << static_cast<std::int64_t>(
-               character.Techniques.MovementTechniqueLevel)
+           << "MovementTechnique"
+           << character.Techniques.MovementTechnique
 
-        << "SecretTechnique"
-        << character.Techniques.SecretTechnique
+           << "MovementTechniqueLevel"
+           << static_cast<std::int64_t>(
+                  character.Techniques.MovementTechniqueLevel)
 
-        << "SecretTechniqueLevel"
-        << static_cast<std::int64_t>(
-               character.Techniques.SecretTechniqueLevel)
+           << "SecretTechnique"
+           << character.Techniques.SecretTechnique
 
-        << "ForbiddenTechnique"
-        << character.Techniques.ForbiddenTechnique
+           << "SecretTechniqueLevel"
+           << static_cast<std::int64_t>(
+                  character.Techniques.SecretTechniqueLevel)
 
-        << "ForbiddenTechniqueLevel"
-        << static_cast<std::int64_t>(
-               character.Techniques.ForbiddenTechniqueLevel)
+           << "ForbiddenTechnique"
+           << character.Techniques.ForbiddenTechnique
 
-        << finalize;
+           << "ForbiddenTechniqueLevel"
+           << static_cast<std::int64_t>(
+                  character.Techniques.ForbiddenTechniqueLevel)
 
-    // ============================================================
-    // BODY CONDITION
-    // ============================================================
+           << finalize;
 
-    auto bodyCondition =
-        document{}
+       // ============================================================
+       // BODY CONDITION
+       // ============================================================
 
-        << "MeridianQuality"
-        << static_cast<std::int64_t>(
-               character.BodyCondition.MeridianQuality)
+       auto bodyCondition =
+           document{}
 
-        << "MeridianDamage"
-        << static_cast<std::int64_t>(
-               character.BodyCondition.MeridianDamage)
+           << "MeridianQuality"
+           << static_cast<std::int64_t>(
+                  character.BodyCondition.MeridianQuality)
 
-        << "HasBrokenMeridians"
-        << character.BodyCondition.bHasBrokenMeridians
+           << "MeridianDamage"
+           << static_cast<std::int64_t>(
+                  character.BodyCondition.MeridianDamage)
 
-        << "BodyRefinementStage"
-        << static_cast<std::int64_t>(
-               character.BodyCondition.BodyRefinementStage)
+           << "HasBrokenMeridians"
+           << character.BodyCondition.bHasBrokenMeridians
 
-        << finalize;
+           << "BodyRefinementStage"
+           << static_cast<std::int64_t>(
+                  character.BodyCondition.BodyRefinementStage)
 
-    // ============================================================
-    // RELATIONS
-    // ============================================================
+           << finalize;
 
-    auto relations =
-        document{}
+       // ============================================================
+       // RELATIONS
+       // ============================================================
 
-        << "IsSectMember"
-        << character.Relations.bIsSectMember
+       auto relations =
+           document{}
 
-        << "SectRank"
-        << static_cast<std::int64_t>(
-               character.Relations.SectRank)
+           << "IsSectMember"
+           << character.Relations.bIsSectMember
 
-        << "MasterName"
-        << character.Relations.MasterName
+           << "SectRank"
+           << static_cast<std::int64_t>(
+                  character.Relations.SectRank)
 
-        << "DiscipleNames"
-        << discipleNames.view()
+           << "OriginPath"
+           << static_cast<std::int64_t>(
+                  character.Relations.OriginPath)
 
-        << "Friends"
-        << friends.view()
+           << "MasterName"
+           << character.Relations.MasterName
 
-        << "FamilyMembers"
-        << familyMembers.view()
+           << "DiscipleNames"
+           << discipleNames.view()
 
-        << "Rivals"
-        << rivals.view()
+           << "Friends"
+           << friends.view()
 
-        << "Enemies"
-        << enemies.view()
+           << "FamilyMembers"
+           << familyMembers.view()
 
-        << "Lovers"
-        << lovers.view()
+           << "Rivals"
+           << rivals.view()
 
-        << finalize;
+           << "Enemies"
+           << enemies.view()
 
-    // ============================================================
-    // COMPLETE CHARACTER DOCUMENT
-    // ============================================================
+           << "Lovers"
+           << lovers.view()
 
-    auto doc =
-        document{}
+           << finalize;
 
-        << "CharacterID"
-        << character.CharacterID
+       // ============================================================
+       // COMPLETE CHARACTER DOCUMENT
+       // ============================================================
 
-        << "Identity"
-        << identity.view()
+       auto doc =
+           document{}
 
-        << "Personality"
-        << personality.view()
+           << "CharacterID"
+           << character.CharacterID
 
-        << "Stats"
-        << stats.view()
+           << "Identity"
+           << identity.view()
 
-        << "Inventory"
-        << inventory.view()
+           << "Personality"
+           << personality.view()
 
-        << "Cultivation"
-        << cultivation.view()
+           << "Stats"
+           << stats.view()
 
-        << "Techniques"
-        << techniques.view()
+           << "Inventory"
+           << inventory.view()
 
-        << "BodyCondition"
-        << bodyCondition.view()
+           << "Cultivation"
+           << cultivation.view()
 
-        << "Relations"
-        << relations.view()
+           << "Techniques"
+           << techniques.view()
 
-        << finalize;
+           << "BodyCondition"
+           << bodyCondition.view()
 
-    // ============================================================
-    // INSERT
-    // ============================================================
+           << "Relations"
+           << relations.view()
 
-    collection.insert_one(
-        doc.view());
+           << finalize;
+
+       // ============================================================
+       // INSERT
+       // ============================================================
+
+       collection.insert_one(
+           doc.view());
 }
